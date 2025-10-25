@@ -5,6 +5,8 @@ on:
 
 jobs:
   build_and_test:
+    name: "Build and Test"
+
     runs-on: ubuntu-latest # ubuntu-24.04 is better
 
     steps:

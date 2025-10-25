@@ -1,0 +1,36 @@
+name: CI Workflow
+
+on:
+  pull_request:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest # ubuntu-24.04 is better
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python version 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies (tools + Flask)
+        run: pip install -r requirements.txt
+
+      - name: Lint (black --check)
+        run: black --check .
+
+      - name: Lint (flake8)
+        run: flake8 . --max-line-length=100 --extend-ignore=E203,W503
+
+      - name: Smoke test the Flask app
+        run: |
+          python - <<'PY'
+          import app as _app
+          client = _app.app.test_client()
+          r = client.get("/health")
+          assert r.status_code == 200, f"Unexpected status: {r.status_code}"
+          print("Healthcheck OK:", r.json)
+          PY

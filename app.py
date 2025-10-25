@@ -12,8 +12,9 @@ def health():
 def index():
     return jsonify(message="Hello, CI!"), 200
 
+
 @app.get("/test")
-def index():
+def test():
     return jsonify(message="This is a test endpoint!"), 200
 
 
